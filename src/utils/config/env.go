@@ -11,13 +11,13 @@ import (
 	log "github.com/Sirupsen/logrus"
 )
 
-func LoadEnvFile(envfile string) {
+func LoadEnvFile(envfile string) error {
 	// load the environment file
 	log.Debug("envfile: ", envfile)
 	f, err := os.Open(envfile)
 	if err != nil {
 		log.Infof("Failed to open config file %s: %s", envfile, err.Error())
-		return
+		return err
 	}
 	defer f.Close()
 
@@ -39,12 +39,13 @@ func LoadEnvFile(envfile string) {
 		}
 
 		if len(os.Getenv(strings.ToUpper(key))) == 0 {
-			err1 := os.Setenv(strings.ToUpper(key), val)
-			if err1 != nil {
-				log.Error(err1.Error())
+			if err := os.Setenv(strings.ToUpper(key), val); err != nil {
+				log.Error(err.Error())
 			}
 		}
 	}
+
+	return nil
 }
 
 // helper function to parse a "key=value" environment variable string.

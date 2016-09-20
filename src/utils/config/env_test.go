@@ -25,6 +25,9 @@ func TestLoadEnvFile(t *testing.T) {
 	defer func() {
 		os.Unsetenv("FOO")
 	}()
+
+	err = LoadEnvFile("/tmp/doesnotexits")
+	assert.NotNil(t, err)
 }
 
 func TestParseLn(t *testing.T) {

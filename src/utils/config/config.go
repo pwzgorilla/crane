@@ -55,7 +55,10 @@ func GetConfig() *Config {
 
 func Init() {
 	envFile := flag.String("config", "env_file", "")
-	LoadEnvFile(*envFile)
+	if err := LoadEnvFile(*envFile); err != nil {
+		log.Errorf("LoadEnvFile failed: %s", err.Error())
+		os.Exit(1)
+	}
 
 	config = new(Config)
 	if err := LoadConfig(config); err != nil {
